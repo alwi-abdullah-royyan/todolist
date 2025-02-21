@@ -1,46 +1,36 @@
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
+import { useFetchUsers } from "@/hooks/useFetchUsers";
 import { getToken } from "@/services/auth";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 
 const AdminUpdateProfile = () => {
+  const api = process.env.NEXT_PUBLIC_API_TODOLIST;
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("USER"); // Default role
+  const [role, setRole] = useState("USER");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const router = useRouter();
   const { slug } = router.query;
 
-  useEffect(() => {
-    if (slug) {
-      const username = slug;
-      fetchUserData(username);
-    }
-  }, [slug]);
+  const { users, loading: userLoading, error: fetchError } = useFetchUsers(api, 0, null, slug);
 
-  // Fetch user data from API
-  const fetchUserData = async (username) => {
-    try {
-      const token = getToken();
-      const response = await axios.get(`http://localhost:8080/api/user/get/${username}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const user = response.data.data;
+  useEffect(() => {
+    if (users.length > 0) {
+      const user = users[0];
       setUsername(user.username || "");
       setEmail(user.email || "");
       setRole(user.role || "USER");
-    } catch (err) {
-      console.error("Failed to fetch user data", err);
-      setError("Failed to load user data");
     }
-  };
+    if (fetchError) {
+      setError(fetchError);
+    }
+  }, [users, fetchError]);
 
   // Handle form submission
   const handleUpdate = async (e) => {
@@ -58,18 +48,18 @@ const AdminUpdateProfile = () => {
       username: username || null,
       email: email || null,
       password: password || null,
-      role: role !== "ADMIN" ? role : "ADMIN", // Prevent role change if ADMIN
+      role: role !== "ADMIN" ? role : "ADMIN",
     };
 
     try {
-      const token = getToken(); // Retrieve your auth token
-      await axios.put(`http://localhost:8080/api/user/update/admin/${slug}`, payload, {
+      const token = getToken();
+      await axios.put(`${api}/user/update/admin/${slug}`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       alert("User updated successfully!");
-      router.push("/todolist/dashboard/users"); // Redirect to user list or relevant page
+      router.push("/todolist/dashboard/users");
     } catch (err) {
       console.error("Failed to update user", err);
       setError("Failed to update user");
@@ -109,9 +99,9 @@ const AdminUpdateProfile = () => {
       {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
 
       <Button
-        text={loading ? "Updating..." : "Update"}
+        text={loading || userLoading ? "Updating..." : "Update"}
         type="submit"
-        disabled={loading}
+        disabled={loading || userLoading}
         className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
       />
     </form>

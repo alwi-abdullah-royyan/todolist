@@ -26,9 +26,8 @@ const RouteGuard = ({ children }) => {
       return;
     }
 
-    // 🔒 Admin-only route protection
     if (pathIsAdmin && !isAdminUser()) {
-      router.replace("/403"); // Redirect to "Forbidden" page
+      router.replace("/403");
       return;
     }
   }, [router.pathname]);

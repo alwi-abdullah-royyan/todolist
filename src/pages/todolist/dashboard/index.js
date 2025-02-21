@@ -1,91 +1,73 @@
 import AllCategory from "@/components/organism/AllCategory";
 import Todolist from "@/components/organism/Todolist";
 import UserList from "@/components/organism/Users";
-import { getCurrentUser, getToken } from "@/services/auth";
-import axios from "axios";
+import { useFetchTodos } from "@/hooks/useFetchTodos";
+import { useFetchUsers } from "@/hooks/useFetchUsers";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { getToken } from "@/services/auth";
 
 const Dashboard = () => {
   const api = process.env.NEXT_PUBLIC_API_TODOLIST;
   const router = useRouter();
-  const { title } = router.query;
+  const { title, name } = router.query;
 
-  const [todos, setTodos] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // Fetching todos with the custom hook
+  const { todos, loading: todosLoading, totalPages, page, setPage } = useFetchTodos(true);
+
+  // Fetching users with the custom hook
+  const { users, loading: usersLoading, totalPages: usersTotalPages } = useFetchUsers(api, page, name);
+
   const token = getToken();
 
-  const [page, setPage] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
-  const user = getCurrentUser();
-  useEffect(() => {
-    const fetchTodos = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`${api}/todolist?page=0&size=5`);
-
-        setTodos(response.data.data);
-        setTotalElements(response.data.totalElements || 0);
-      } catch (error) {
-        console.error("Failed to fetch todos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchTodos();
-  }, [api]);
   return (
-    <>
-      <div className="container mx-auto p-6">
-        <h1 className="text-3xl text-center font-bold text-blue-500 mb-6">Dashboard</h1>
-        <h2 className="text-3xl font-bold text-blue-500 mb-6">All To-Do List</h2>
-        <div className="md:max-h-72 max-h-96 overflow-auto">
-          <Todolist todos={todos} loading={loading} />
-        </div>
-        <div className="flex justify-between items-center py-4">
-          <div>
-            <p>Total todolist: {totalElements}</p>
-          </div>
-          <div>
-            <Link
-              href={`/todolist/dashboard/all-todolist`}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-            >
-              See All
-            </Link>
-          </div>
-        </div>
-        <h2 className="text-3xl font-bold text-blue-500 mb-6">All Category</h2>
-        <div className="md:max-h-72 max-h-96 overflow-auto">
-          <AllCategory />
-        </div>
-        <div className="flex justify-end items-center py-4">
-          <div>
-            <Link
-              href={`/todolist/dashboard/category`}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-            >
-              See All
-            </Link>
-          </div>
-        </div>
-        <h2 className="text-3xl font-bold text-blue-500 mb-6">All users</h2>
-        <div className="md:max-h-72 max-h-96 overflow-auto">
-          <UserList token={token} pageSize={5} />
-        </div>
-        <div className="flex justify-end items-center py-4">
-          <div>
-            <Link
-              href={`/todolist/dashboard/users`}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-            >
-              See All
-            </Link>
-          </div>
-        </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl text-center font-bold text-blue-500 mb-6">Dashboard</h1>
+
+      {/* Todos Section */}
+      <h2 className="text-3xl font-bold text-blue-500 mb-6">All To-Do List</h2>
+      <div className="md:max-h-72 max-h-96 overflow-auto">
+        <Todolist todos={todos} loading={todosLoading} />
       </div>
-    </>
+      <div className="flex justify-between items-center py-4">
+        <p>Total todolist: {totalPages * 5}</p>
+        <Link
+          href={`/todolist/dashboard/all-todolist`}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+        >
+          See All
+        </Link>
+      </div>
+
+      {/* Categories Section */}
+      <h2 className="text-3xl font-bold text-blue-500 mb-6">All Category</h2>
+      <div className="md:max-h-72 max-h-96 overflow-auto">
+        <AllCategory />
+      </div>
+      <div className="flex justify-end items-center py-4">
+        <Link
+          href={`/todolist/dashboard/category`}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+        >
+          See All
+        </Link>
+      </div>
+
+      {/* Users Section */}
+      <h2 className="text-3xl font-bold text-blue-500 mb-6">All users</h2>
+      <div className="md:max-h-72 max-h-96 overflow-auto">
+        <UserList token={token} pageSize={5} users={users} loading={usersLoading} />
+      </div>
+      <div className="flex justify-end items-center py-4">
+        <Link
+          href={`/todolist/dashboard/users`}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+        >
+          See All
+        </Link>
+      </div>
+    </div>
   );
 };
 

@@ -1,42 +1,23 @@
 // components/CategoryList.js
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useCategories } from "@/hooks/useCategories";
 import axios from "axios";
 import Link from "next/link";
 
 const AllCategory = () => {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const categories = useCategories(); // Fetch categories using the custom hook
   const [deleting, setDeleting] = useState(null); // State to track deletion status
   const api = process.env.NEXT_PUBLIC_API_TODOLIST;
 
-  useEffect(() => {
-    fetchCategories();
-  }, [api]);
-
-  // Fetch categories from the API
-  const fetchCategories = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${api}/todolist/category`);
-      setCategories(response.data.data || []);
-    } catch (error) {
-      console.error("Failed to fetch categories:", error);
-      alert("Failed to load categories. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Handle category deletion
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this category?")) return;
 
-    setDeleting(id); // Show loading state for the specific category
+    setDeleting(id);
 
     try {
       await axios.delete(`${api}/todolist/category/${id}`);
-      setCategories((prevCategories) => prevCategories.filter((category) => category.id !== id));
       alert("Category deleted successfully.");
+      window.location.reload(); // Refresh categories after deletion
     } catch (error) {
       console.error("Failed to delete category:", error);
       alert("Failed to delete category. Please try again.");
@@ -45,11 +26,7 @@ const AllCategory = () => {
     }
   };
 
-  if (loading) {
-    return <p className="text-gray-500 text-center">Loading categories...</p>;
-  }
-
-  if (categories.length === 0) {
+  if (!categories.length) {
     return <p className="text-gray-500 text-center">No categories available.</p>;
   }
 
@@ -61,6 +38,12 @@ const AllCategory = () => {
           <div key={category.id} className="p-4 bg-gray-800 rounded-md shadow-md flex items-center justify-between">
             <p className="text-white font-medium">{category.name}</p>
             <div className="flex items-center gap-2">
+              <Link
+                href={`/todolist/dashboard/category/edit/${category.id}`}
+                className="text-blue-400 hover:underline text-sm"
+              >
+                Edit
+              </Link>
               <Link
                 href={`/todolist/category?categoryId=${category.id}`}
                 className="text-blue-400 hover:underline text-sm"

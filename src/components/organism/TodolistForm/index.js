@@ -1,6 +1,7 @@
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
+import { useRouter } from "next/router";
 import React from "react";
 
 const TodolistForm = ({
@@ -11,6 +12,7 @@ const TodolistForm = ({
   categories,
   submitText = "Create ToDo",
 }) => {
+  const router = useRouter();
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input

@@ -1,18 +1,9 @@
-import { useRouter } from "next/router";
+// components/organism/TodoDetails.js
+
 import Image from "next/image";
-import Button from "@/components/atoms/Button";
-import { useTodoDetails } from "@/hooks/useTodoDetails";
 
-const TodoDetailPage = () => {
-  const router = useRouter();
-  const { slug } = router.query;
+const TodoDetails = ({ todo }) => {
   const api = process.env.NEXT_PUBLIC_API_TODOLIST;
-
-  const { todo, loading } = useTodoDetails(slug);
-
-  if (loading) return <p>Loading...</p>;
-
-  if (!todo) return <p>Todo not found! Redirecting...</p>;
 
   return (
     <div className="container mx-auto p-6">
@@ -42,16 +33,8 @@ const TodoDetailPage = () => {
           />
         </div>
       )}
-      <div className="pt-5">
-        <Button
-          text="Back"
-          type="button"
-          onClick={() => router.back()}
-          className="bg-blue-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors"
-        />
-      </div>
     </div>
   );
 };
 
-export default TodoDetailPage;
+export default TodoDetails;

@@ -3,6 +3,7 @@ import Input from "@/components/atoms/Input";
 import { getCurrentUser, logout } from "@/services/auth"; // Add logout import
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router"; // For redirection
+import axios from "axios";
 
 const UserUpdateProfile = () => {
   const [username, setUsername] = useState("");
@@ -27,15 +28,12 @@ const UserUpdateProfile = () => {
     };
 
     try {
-      const token = getToken(); // Retrieve your auth token
-      await axios.put(`http://localhost:8080/api/user/update/${username}`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.put(`http://localhost:8080/api/user/update/${username}`, payload);
+
       alert("Profile updated successfully!");
     } catch (err) {
       setError("Failed to update profile");
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -50,8 +48,22 @@ const UserUpdateProfile = () => {
 
   return (
     <form onSubmit={handleUpdate} className="space-y-4">
-      <Input placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <Input placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input
+        name={"username"}
+        placeholder="Username"
+        value={username}
+        onChange={(e) => {
+          setUsername(e.target.value);
+        }}
+      />
+      <Input
+        name={"password"}
+        placeholder="Password"
+        type="password"
+        onChange={(e) => {
+          setPassword(e.target.value);
+        }}
+      />
       {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
 
       <Button
