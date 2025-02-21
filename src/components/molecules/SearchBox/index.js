@@ -2,7 +2,7 @@ import Button from "@/components/atoms/Button";
 import Link from "next/link";
 import React from "react";
 
-const SearchBox = ({ onSubmit, search, setSearch }) => {
+const SearchBox = ({ onSubmit, search, setSearch, category = true }) => {
   return (
     <form onSubmit={onSubmit} className="mb-6 flex flex-wrap items-center gap-2">
       <input
@@ -18,14 +18,15 @@ const SearchBox = ({ onSubmit, search, setSearch }) => {
         type="submit"
         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
       />
-
-      <Link href="/todolist/category">
-        <Button
-          text="Filter category"
-          type="button"
-          className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
-        />
-      </Link>
+      {category && (
+        <Link href="/todolist/category">
+          <Button
+            text="Filter category"
+            type="button"
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
+          />
+        </Link>
+      )}
     </form>
   );
 };

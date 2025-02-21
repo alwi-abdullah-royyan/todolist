@@ -1,6 +1,7 @@
 import AllCategory from "@/components/organism/AllCategory";
 import Todolist from "@/components/organism/Todolist";
-import { getCurrentUser } from "@/services/auth";
+import UserList from "@/components/organism/Users";
+import { getCurrentUser, getToken } from "@/services/auth";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,6 +14,7 @@ const Dashboard = () => {
 
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const token = getToken();
 
   const [page, setPage] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
@@ -62,6 +64,20 @@ const Dashboard = () => {
           <div>
             <Link
               href={`/todolist/dashboard/category`}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+            >
+              See All
+            </Link>
+          </div>
+        </div>
+        <h2 className="text-3xl font-bold text-blue-500 mb-6">All users</h2>
+        <div className="md:max-h-72 max-h-96 overflow-auto">
+          <UserList token={token} pageSize={5} />
+        </div>
+        <div className="flex justify-end items-center py-4">
+          <div>
+            <Link
+              href={`/todolist/dashboard/users`}
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
             >
               See All

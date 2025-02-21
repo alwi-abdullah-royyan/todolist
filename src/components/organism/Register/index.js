@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import InputForm from "@/components/molecules/InputForm";
 import Button from "@/components/atoms/Button";
 
-const Register = () => {
+const Register = ({ path = "/login" }) => {
   const [failed, setFailed] = useState(false);
   const router = useRouter();
   async function handleRegister(event) {
@@ -22,7 +22,7 @@ const Register = () => {
 
       if (res.status) {
         setFailed(false);
-        router.push("/login");
+        router.push(path);
       } else {
         setFailed(res.error.response.data.data);
       }

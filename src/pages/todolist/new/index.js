@@ -32,7 +32,7 @@ const NewTodoPage = () => {
         const response = await axios.get(`${api}/todolist/category`);
         setCategories(response.data.data || []);
       } catch (error) {
-        console.error("Failed to fetch categories:", error);
+        console.log("Failed to fetch categories:", error);
       }
     };
     fetchCategories();

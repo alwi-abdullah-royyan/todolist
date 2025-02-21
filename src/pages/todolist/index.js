@@ -32,7 +32,7 @@ const TodoListPage = () => {
         setTodos(response.data.data);
         setTotalPages(response.data.totalPages || 1);
       } catch (error) {
-        console.error("Failed to fetch todos:", error);
+        console.log("Failed to fetch todos:", error);
       } finally {
         setLoading(false);
       }

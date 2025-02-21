@@ -25,12 +25,9 @@ const RouteGuard = ({ children }) => {
       router.replace("/todolist");
       return;
     }
-    console.log(pathIsAdmin);
 
     // 🔒 Admin-only route protection
     if (pathIsAdmin && !isAdminUser()) {
-      console.log("in");
-
       router.replace("/403"); // Redirect to "Forbidden" page
       return;
     }

@@ -21,12 +21,9 @@ const Input = ({
     required: isRequired,
     className: `${className} text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500`,
   };
-  if (onChange && value) {
-    commonProps.onChange = onChange;
-    commonProps.value = value;
-  } else if (onChange || value) {
-    console.log("Please provide both onChange and value");
-  }
+  if (onChange) commonProps.onChange = onChange;
+  if (value) commonProps.value = value;
+
   if (isCheckboxOrRadio) {
     return (
       <input
