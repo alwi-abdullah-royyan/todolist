@@ -10,6 +10,7 @@ import { useFetchTodos } from "@/hooks/useFetchTodos";
 import { useSearch } from "@/hooks/useSearch";
 import { usePagination } from "@/hooks/usePagination";
 import { handleDeleteSuccess } from "@/utils/handleDeleteSuccess";
+import { Icons } from "react-toastify";
 
 const TodoListPage = () => {
   const router = useRouter();
@@ -38,10 +39,12 @@ const TodoListPage = () => {
         />
 
         <Button
-          text="Trash"
+          text="trash"
           onClick={() => router.push("/todolist/trash")}
           className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-950 transition-colors"
-        />
+        >
+          <Icons.Trash />
+        </Button>
       </div>
 
       <Todolist

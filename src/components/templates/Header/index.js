@@ -72,7 +72,9 @@ const Header = () => {
             href="/login"
             className="hidden md:block hover:bg-blue-800 transition-colors text-white px-4 py-2 rounded-md"
           >
-            Login
+            <div className="flex">
+              <Icons.Login /> Login
+            </div>
           </Link>
         )}
 
@@ -123,7 +125,9 @@ const Header = () => {
               </Link>
             ) : (
               <Link href="/login" onClick={() => setIsOpen(false)} className="hover:text-blue-500 transition-colors">
-                Login
+                <div className="flex">
+                  <Icons.Login /> Login
+                </div>
               </Link>
             )}
           </nav>

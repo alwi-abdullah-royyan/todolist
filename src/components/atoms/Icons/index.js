@@ -4,10 +4,12 @@ import Explore from "./Explore";
 import Feeds from "./Feeds";
 import Friends from "./Friends";
 import Hamburger from "./Hamburger";
+import Login from "./Login";
 import Messages from "./Messages";
 import Notification from "./Notification";
 import Search from "./Search";
 import Settings from "./Settings";
+import Trash from "./Trash";
 
 const Icons = {
   Feeds,
@@ -20,5 +22,7 @@ const Icons = {
   Back,
   Emoji404,
   Hamburger,
+  Login,
+  Trash,
 };
 export default Icons;
