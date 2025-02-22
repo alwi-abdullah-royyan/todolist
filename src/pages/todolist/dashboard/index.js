@@ -17,7 +17,7 @@ const Dashboard = () => {
   const { todos, loading: todosLoading, totalPages, page, setPage } = useFetchTodos(true);
 
   // Fetching users with the custom hook
-  const { users, loading: usersLoading, totalPages: usersTotalPages } = useFetchUsers(api, page, name);
+  const { users, setUsers, loading: usersLoading, totalPages: usersTotalPages } = useFetchUsers(api, page, name);
 
   const token = getToken();
 
@@ -57,7 +57,7 @@ const Dashboard = () => {
       {/* Users Section */}
       <h2 className="text-3xl font-bold text-blue-500 mb-6">All users</h2>
       <div className="md:max-h-72 max-h-96 overflow-auto">
-        <UserList token={token} pageSize={5} users={users} loading={usersLoading} />
+        <UserList token={token} pageSize={5} users={users} loading={usersLoading} setUser={setUsers} />
       </div>
       <div className="flex justify-end items-center py-4">
         <Link

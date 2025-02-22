@@ -57,5 +57,5 @@ export const useFetchUsers = (api, page, name = null, username = null) => {
     }
   }, [api, page, name, username, token]);
 
-  return { users, loading, totalPages, error };
+  return { users, setUsers, loading, totalPages, error };
 };

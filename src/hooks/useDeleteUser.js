@@ -12,7 +12,7 @@ export const useDeleteUser = (api) => {
     if (!confirm("Are you sure you want to delete this user?")) {
       return;
     }
-
+    if (loading) return;
     setLoading(true);
     setError(null);
     try {

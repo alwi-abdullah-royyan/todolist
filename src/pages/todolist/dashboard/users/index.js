@@ -45,7 +45,22 @@ const UsersPage = () => {
     };
     fetchUsers();
   }, [api, token, page, name]);
-
+  const handleDelete = async (e, username) => {
+    e.preventDefault();
+    if (confirm("Are you sure you want to delete this user?")) {
+      try {
+        await axios.delete(`${api}/user/delete/${username}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        fetchUsers(page); // Refresh user list after deletion
+      } catch (error) {
+        console.log("Failed to delete user:", error);
+        alert("Failed to delete user. .");
+      }
+    }
+  };
   const handleSearch = (e) => {
     e.preventDefault();
     setPage(0); // Reset to the first page on new search
@@ -77,7 +92,7 @@ const UsersPage = () => {
           />
         </div>
       </div>
-      <UserList token={token} users={users} />
+      <UserList token={token} users={users} setUser={setUsers} />
       <PaginationControls
         handleNextPage={handleNextPage}
         handlePreviousPage={handlePreviousPage}

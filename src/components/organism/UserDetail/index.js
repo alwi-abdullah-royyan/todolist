@@ -44,10 +44,9 @@ const UserDetails = ({ user, deleteError, deleteUser }) => {
 
           {user.role !== "ADMIN" && (
             <Button
-              text={loadingDelete ? "Deleting..." : "Delete User"}
+              text={"Delete User"}
               type="button"
               onClick={() => deleteUser(user.username)}
-              disabled={loadingDelete}
               className="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
             />
           )}

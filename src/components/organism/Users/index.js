@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const UserList = ({ token, pageSize = 10, users }) => {
+const UserList = ({ token, pageSize = 10, users, setUser }) => {
   const api = process.env.NEXT_PUBLIC_API_TODOLIST;
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -12,15 +12,12 @@ const UserList = ({ token, pageSize = 10, users }) => {
     e.preventDefault();
     if (confirm("Are you sure you want to delete this user?")) {
       try {
-        console.log(`${api}/user/delete/${username}`);
-        console.log(token);
-
         await axios.delete(`${api}/user/delete/${username}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        fetchUsers(page); // Refresh user list after deletion
+        setUser((prevUsers) => prevUsers.filter((user) => user.username !== username));
       } catch (error) {
         console.log("Failed to delete user:", error);
         alert("Failed to delete user. .");
