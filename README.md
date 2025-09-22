@@ -48,6 +48,7 @@ Backend API is hosted separately using **Spring Boot**. All backend-related ques
 git clone https://github.com/yourusername/todolist.git
 cd todolist
 npm install
+rename .env.example to .env
 ```
 
 ### Run Development Server
